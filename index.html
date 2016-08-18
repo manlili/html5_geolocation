@@ -1,0 +1,69 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+    <meta charset="utf-8"/>  
+    <title>基于浏览器的HTML5查找地理位置</title> 
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" /> 
+  <script>
+  var options={
+	   enableHighAccuracy:true,   //高精度定位参数
+	   maximumAge:1000
+   }
+   function getLocation(){
+       if(navigator.geolocation){
+           //浏览器支持geolocation
+           navigator.geolocation.getCurrentPosition(onSuccess,onError,options);  //getCurrentPosition 只获取一次用户的地理位置函数
+           //onSuccess成功返回的回调函数(必选),onError失败返回的回调函数(可选),设置精确度等参数(可选options)
+           
+           //navigator.geolocation.watchPosition(onSuccess,onError,options);  //watchPosition 继续获取用户的位置,适合于导航
+           //onSuccess成功返回的回调函数(必选),onError失败返回的回调函数(可选),设置精确度等参数(可选options)
+       }else{
+           //浏览器不支持geolocation
+           alert ('您的浏览器暂不支持定位');
+       }
+   }
+   //成功时
+   function onSuccess(position){
+     //返回用户位置
+     //经度
+     var longitude =position.coords.longitude;
+     
+     //纬度
+     var latitude = position.coords.latitude;
+     
+     //精确度
+     var accuracy = position.coords.accuracy;
+     
+     //高度精确度
+     var altitudeAccuracy = position.coords.altitudeAccuracy;
+     
+     //设备正北顺时针前进的方位
+     var heading = position.coords.heading;
+     
+     //设备外部环境的移动速度(m/s)
+     var speed = position.coords.speed;
+     
+     //当位置捕获到时的时间戳
+     var timestamp = position.timestamp;
+     
+     document.getElementById("container").innerHTML= "您的经度是="+longitude+'<br>'
+     +"您的纬度是="+latitude+'<br>'+"您的精确度是="+accuracy+'<br>'
+     +"您的高度精确度是="+altitudeAccuracy+'<br>'+"您的设备正北顺时针前进的方位是="+heading+'<br>'
+     +"您的设备外部环境的移动速度(m/s)是="+speed+'<br>'+"您的当位置捕获到时的时间戳是="+timestamp+'<br>';
+   }
+   //失败时
+   function onError(error){
+     switch(error.code){
+       case 1:alert("位置服务被拒绝");break;
+       case 2:alert("暂时获取不到位置信息");break;
+       case 3:alert("获取信息超时");break;
+       case 4:alert("未知错误");break;
+     }
+   }
+   window.onload=getLocation;
+   </script>
+</head>
+<body>
+   <div id="container" style="300px;height: 300px"></div>
+</body>
+</html>

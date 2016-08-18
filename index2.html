@@ -1,0 +1,58 @@
+<!DOCTYPE html>  
+<html>  
+<head>  
+    <meta charset="utf-8"/>  
+    <title>基于浏览器的HTML5查找地理位置和调取百度地图api</title> 
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <!-- 百度API -->
+ 		<script src="http://api.map.baidu.com/api?v=1.2" type="text/javascript"></script>  
+  <script>
+   var options={
+	   enableHighAccuracy:true,   //高精度定位参数
+	   maximumAge:1000
+   }
+   function getLocation(){
+       if(navigator.geolocation){
+           //浏览器支持geolocation
+           navigator.geolocation.getCurrentPosition(onSuccess,onError,options);  //getCurrentPosition 只获取一次用户的地理位置函数
+           //onSuccess成功返回的回调函数(必选),onError失败返回的回调函数(可选),设置精确度等参数(可选options)
+           
+           //navigator.geolocation.watchPosition(onSuccess,onError,options);  //watchPosition 继续获取用户的位置,适合于导航
+           //onSuccess成功返回的回调函数(必选),onError失败返回的回调函数(可选),设置精确度等参数(可选options)
+       }else{
+           //浏览器不支持geolocation
+           alert ('您的浏览器暂不支持定位');
+       }
+   }
+   //成功时
+   function onSuccess(position){
+     //返回用户位置
+     //经度
+     var longitude =position.coords.longitude;
+     //纬度
+     var latitude = position.coords.latitude;
+     //使用百度地图API
+     //创建地图实例  
+     var map =new BMap.Map("container");
+     //创建一个坐标
+     var point =new BMap.Point(longitude,latitude);
+     //地图初始化，设置中心点坐标和地图级别  
+     map.centerAndZoom(point,15);
+     map.addOverlay(new BMap.Marker(point)); //在地图上你的位置显示红色点点
+   }
+   //失败时
+   function onError(error){
+     switch(error.code){
+       case 1:alert("位置服务被拒绝");break;
+       case 2:alert("暂时获取不到位置信息");break;
+       case 3:alert("获取信息超时");break;
+       case 4:alert("未知错误");break;
+     }
+   }
+   window.onload=getLocation;
+   </script>
+</head>
+<body>
+   <div id="container" style="300px;height: 300px"></div>
+</body>
+</html>
